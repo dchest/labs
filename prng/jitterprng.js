@@ -34,7 +34,7 @@ function addJitterRand(out) {
 
     for (var i = 0; i < len * 2; i++) {
       // Add timing and permute
-      // (Based on Speck32 with neigboring state values as round keys)
+      // (Based on Speck32 with neighboring state values as round keys)
       var x = s[left] ^ (milliseconds() - start) * 5000 | 0,
           y = s[right] ^ (i << 16);
 
