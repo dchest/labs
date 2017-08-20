@@ -25,7 +25,7 @@ var milliseconds = (function () {
     return Date.now.bind(Date);
 })();
 
-function addBitFlipRand(out) {
+function bitFlipRand(out) {
 
     function flip() {
         var b = 0, start = milliseconds();
@@ -56,4 +56,4 @@ function addBitFlipRand(out) {
     return out;
 }
 
-module.exports = addBitFlipRand;
+module.exports = bitFlipRand;

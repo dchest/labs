@@ -20,7 +20,7 @@ var milliseconds = (function () {
     return Date.now.bind(Date);
 })();
 
-function addJitterRand(out) {
+function jitterRand(out) {
 
     function genblock(ctr, s) {
         var len = s.length,
@@ -75,4 +75,4 @@ function addJitterRand(out) {
     return out;
 }
 
-module.exports = addJitterRand;
+module.exports = jitterRand;
