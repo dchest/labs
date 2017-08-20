@@ -67,7 +67,7 @@ function jitterRand(out) {
     }
 
     var state = new Uint32Array(256),
-        view = new DataView(state.buffer);
+        view = new DataView(state.buffer, 0, 8);
 
     for (var i = 0; i < out.length; i++) {
         if (i % 8 === 0) {
