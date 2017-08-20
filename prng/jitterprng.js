@@ -51,7 +51,6 @@ function addJitterRand(out) {
       morerounds = s[right] % (rounds / 2 | 0);
       left = s[left] % len;
       right = (left + 1) % len;
-      //console.log(Array.prototype.map.call(s, x => x.toString(16)).join(','));
     }
 
     // Collapse and erase state,
