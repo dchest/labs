@@ -28,17 +28,18 @@ function jitterRand(out) {
             right = 1,
             rounds = 27,
             morerounds = 0,
+            x, y, i,
             start = milliseconds();
 
         s[0] = 0;
         s[1] = ctr;
 
-        for (var i = 0; i < len * 2; i++) {
+        for (i = 0; i < len * 2; i++) {
             // Add timing and permute
             // (Based on Speck32 with neighboring state values
             // xored with round number as round keys.)
-            var x = s[left] ^ ((milliseconds() - start) * 5000),
-                y = s[right] ^ (i << 16);
+            x = s[left] ^ ((milliseconds() - start) * 5000);
+            y = s[right] ^ (i << 16);
 
             for (var r = 0; r < rounds + morerounds; r++) {
                 x = ((x << 24 | x >>> 8) + y) ^ s[(right + 1) % len] ^ r;
@@ -57,7 +58,8 @@ function jitterRand(out) {
 
         // Collapse and erase state,
         // leaving result in the first two indexes.
-        for (var i = 1; i < len - 1; i += 2) {
+
+        for (i = 2; i < len - 1; i += 2) {
             s[0] = (s[0] + s[i + 0]) | 0;
             s[1] = (s[1] + s[i + 1]) | 0;
             s[i + 0] = 0;
