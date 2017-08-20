@@ -72,7 +72,7 @@ function jitterRand(out) {
         }
         out[i] ^= view.getUint8(i % 8);
     }
-    for (var i = 0; i < state.length; i++) state[i] = 0;
+    state[0] = state[1] = 0;
     return out;
 }
 
