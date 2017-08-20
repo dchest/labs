@@ -42,7 +42,7 @@ function jitterRand(out) {
             y = s[right] ^ (i << 16);
 
             for (var r = 0; r < rounds + morerounds; r++) {
-                x = ((x << 24 | x >>> 8) + y) ^ s[(right + 1) % len] ^ r;
+                x = ((x << 24 | x >>> 8) + y) ^ s[(right + r + 1) % len] ^ r;
                 y = (y << 3 | y >>> 29) ^ x;
             }
 
