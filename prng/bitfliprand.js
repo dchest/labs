@@ -12,12 +12,12 @@
  * should be whitened and mixed with some other randomness source.
  */
 
-var milliseconds = (function() {
+var milliseconds = (function () {
     if (typeof performance !== "undefined") {
         return performance.now.bind(performance);
     }
     if (typeof process !== "undefined" && process.hrtime) {
-        return function() {
+        return function () {
             var t = process.hrtime();
             return (t[0] * 1e9 + t[1]) / 1e6;
         };

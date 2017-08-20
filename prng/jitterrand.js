@@ -7,12 +7,12 @@
  * memory accesses, making it vary based on CPU and memory accesses.
  */
 
-var milliseconds = (function() {
+var milliseconds = (function () {
     if (typeof performance !== "undefined") {
         return performance.now.bind(performance);
     }
     if (typeof process !== "undefined" && process.hrtime) {
-        return function() {
+        return function () {
             var t = process.hrtime();
             return (t[0] * 1e9 + t[1]) / 1e6;
         };
@@ -22,57 +22,57 @@ var milliseconds = (function() {
 
 function addJitterRand(out) {
 
-  function genblock(ctr, s) {
-    var len = s.length,
-        left = 0,
-        right = 1,
-        rounds = 27,
-        morerounds = 0,
-        start = milliseconds();
+    function genblock(ctr, s) {
+        var len = s.length,
+            left = 0,
+            right = 1,
+            rounds = 27,
+            morerounds = 0,
+            start = milliseconds();
 
-    s[0] = 0;
-    s[1] = ctr;
+        s[0] = 0;
+        s[1] = ctr;
 
-    for (var i = 0; i < len * 2; i++) {
-      // Add timing and permute (based on Speck32 with neighboring state values
-      // xored with round number as round keys)
-      var x = s[left] ^ (milliseconds() - start) * 5000 | 0,
-          y = s[right] ^ (i << 16);
+        for (var i = 0; i < len * 2; i++) {
+            // Add timing and permute (based on Speck32 with neighboring state values
+            // xored with round number as round keys)
+            var x = s[left] ^ (milliseconds() - start) * 5000 | 0,
+                y = s[right] ^ (i << 16);
 
-      for (var r = 0; r < rounds + morerounds; r++) {
-        x = ((x << 24 | x >>> 8) + y) ^ s[(right + 1) % len] ^ r;
-        y = (y << 3 | y >>> 29) ^ x;
-      }
+            for (var r = 0; r < rounds + morerounds; r++) {
+                x = ((x << 24 | x >>> 8) + y) ^ s[(right + 1) % len] ^ r;
+                y = (y << 3 | y >>> 29) ^ x;
+            }
 
-      s[left] = y >>> 0;
-      s[right] = x >>> 0;
+            s[left] = y >>> 0;
+            s[right] = x >>> 0;
 
-      // Set new values for morerounds and indexes
-      // based on data in current indexes after permutation.
-      morerounds = s[right] % (rounds / 2 | 0);
-      left = s[left] % len;
-      right = (left + 1) % len;
+            // Set new values for morerounds and indexes
+            // based on data in current indexes after permutation.
+            morerounds = s[right] % (rounds / 2 | 0);
+            left = s[left] % len;
+            right = (left + 1) % len;
+        }
+
+        // Collapse and erase state,
+        // leaving result in the first two indexes.
+        for (var i = 1; i < len; i += 2) {
+            s[0] ^= s[i + 0]; s[i + 0] = 0;
+            s[1] ^= s[i + 1]; s[i + 1] = 0;
+        }
     }
 
-    // Collapse and erase state,
-    // leaving result in the first two indexes.
-    for (var i = 1; i < len; i += 2) {
-      s[0] ^= s[i + 0]; s[i + 0] = 0;
-      s[1] ^= s[i + 1]; s[i + 1] = 0;
-    }
-  }
+    var state = new Uint32Array(256),
+        view = new DataView(state.buffer);
 
-  var state = new Uint32Array(256),
-      view = new DataView(state.buffer);
-
-  for (var i = 0; i < out.length; i++) {
-    if (i % 8 === 0) {
-      genblock(i, state);
+    for (var i = 0; i < out.length; i++) {
+        if (i % 8 === 0) {
+            genblock(i, state);
+        }
+        out[i] ^= view.getUint8(i % 8);
     }
-    out[i] ^= view.getUint8(i % 8);
-  }
-  for (var i = 0; i < state.length; i++) state[i] = 0;
-  return out;
+    for (var i = 0; i < state.length; i++) state[i] = 0;
+    return out;
 }
 
 module.exports = addJitterRand;
