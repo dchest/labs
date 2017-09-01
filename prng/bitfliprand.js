@@ -10,10 +10,9 @@
  * (can as well return all zeros or all ones) due to the need to avoid
  * infinite loops or taking too long to generate bits, so the output
  * should be whitened and mixed with some other randomness source.
- * (UPDATE: output is clearly non-uniform even when the limit is not
- * hit  ¯\_(ツ)_/¯)
  */
 
+var mintime = 0.1;
 var milliseconds = (function () {
     if (typeof performance !== "undefined") {
         return performance.now.bind(performance);
@@ -24,6 +23,7 @@ var milliseconds = (function () {
             return (t[0] * 1e9 + t[1]) / 1e6;
         };
     }
+    mintime = 1;
     return Date.now.bind(Date);
 })();
 
@@ -31,7 +31,7 @@ function bitFlipRand(out) {
 
     function flip() {
         var b = 0, start = milliseconds();
-        while (milliseconds() - start < 0.01) b ^= 1;
+        while (milliseconds() - start < mintime) b ^= 1;
         return b;
     }
 
