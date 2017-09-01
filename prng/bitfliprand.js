@@ -10,6 +10,8 @@
  * (can as well return all zeros or all ones) due to the need to avoid
  * infinite loops or taking too long to generate bits, so the output
  * should be whitened and mixed with some other randomness source.
+ * (UPDATE: output is clearly non-uniform even when the limit is not
+ * hit  ¯\_(ツ)_/¯)
  */
 
 var milliseconds = (function () {
