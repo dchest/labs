@@ -174,12 +174,15 @@ function getbit(pos) {
 
 Object.keys(rngs).forEach(function(name) {
     for (var i = 0; i < bits.length; i++) bits[i] = 0;
+    var t = Date.now();
     rngs[name](bits);
+    var d = Date.now() - t;
+    var mbs = name + ': ' + 1 / d * bits.length / 1000 + ' MB/s';
 
     var canvas = document.createElement('canvas');
     canvas.width = width;
     canvas.height = height;
-    document.body.appendChild(document.createTextNode(name));
+    document.body.appendChild(document.createTextNode(mbs));
     document.body.appendChild(document.createElement('br'));
     document.body.appendChild(canvas);
     document.body.appendChild(document.createElement('br'));
