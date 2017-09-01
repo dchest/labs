@@ -31,8 +31,8 @@ function jitterRand(out) {
             x, y, i,
             start = milliseconds();
 
-        s[0] = 0;
-        s[1] = ctr;
+        s[left] = 0;
+        s[right] = ctr;
 
         for (i = 0; i < len * 2; i++) {
             // Add timing and permute
