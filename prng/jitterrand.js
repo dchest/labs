@@ -7,6 +7,10 @@
  * memory accesses, making it vary based on CPU and memory accesses.
  */
 
+
+// Base number of permutation rounds,
+// set to recommened value for Speck-32-128.
+var rounds = 37;
 var milliseconds = (function () {
     if (typeof performance !== "undefined") {
         return performance.now.bind(performance);
@@ -17,6 +21,9 @@ var milliseconds = (function () {
             return (t[0] * 1e9 + t[1]) / 1e6;
         };
     }
+    // Less precise timer requires slower permutation,
+    // so increase the number of rounds.
+    rounds *= 8;
     return Date.now.bind(Date);
 })();
 
@@ -26,7 +33,6 @@ function jitterRand(out) {
         var len = s.length,
             left = 0,
             right = 1,
-            rounds = 27,
             morerounds = 0,
             x, y, i,
             start = milliseconds();
